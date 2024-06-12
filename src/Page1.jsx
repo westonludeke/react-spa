@@ -5,7 +5,12 @@ export const Page1 = () => {
   console.log(arr);
 
   const history = useHistory();
-  const onClickDetailA = () => history.push("/page1/detailA");
+
+  const onClickDetailA = () => {
+    window.CommandBar.trackEvent('startTourDetailA', {});
+
+    history.push("/page1/detailA");
+  };
 
   return (
     <div>
@@ -14,7 +19,7 @@ export const Page1 = () => {
       <br />
       <Link to="/page1/detailB">DetailB</Link>
       <br />
-      <button onClick={onClickDetailA}>DetailA</button>
+      <button id="detailAButton" onClick={onClickDetailA}>DetailA</button>
     </div>
   );
 };
