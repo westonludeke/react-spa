@@ -4,13 +4,18 @@ export const Page1DetailA = () => {
   const { state } = useLocation();
   console.log(state);
 
-  const history = useHistory();
-  const onClickBack = () => history.goBack();
+  // const history = useHistory();
+
+  const onClickInfo = () => {
+    console.log('Info button clicked');
+    window.CommandBar.trackEvent('startTourDetailA', {});
+    console.log('Event tracked: startTourDetailA');
+  };
 
   return (
     <div>
       <h1>Page1DetailAページです</h1>
-      <button onClick={onClickBack}>Back</button>
+      <button onClick={onClickInfo}>Info</button>
     </div>
   );
 };

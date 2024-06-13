@@ -8,7 +8,6 @@ export const Page1 = () => {
 
   const onClickDetailA = () => {
     window.CommandBar.trackEvent('startTourDetailA', {});
-
     history.push("/page1/detailA");
   };
 
@@ -19,7 +18,7 @@ export const Page1 = () => {
       <br />
       <Link to="/page1/detailB">DetailB</Link>
       <br />
-      <button id="detailAButton" onClick={onClickDetailA}>DetailA</button>
+      <button id="detailAButton" onClick={onClickDetailA}>DetailA</button><br></br>
     </div>
   );
 };
