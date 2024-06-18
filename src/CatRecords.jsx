@@ -2,42 +2,68 @@ import React, { useEffect } from 'react';
 
 const CatRecords = () => {
   useEffect(() => {
-    const setupCatRecords = async () => {
+    const setupCommandBar = () => {
       if (typeof window === 'undefined' || typeof CommandBar === 'undefined') {
-        console.error('CommandBar is not available in CatRecords component.');
+        console.error('CommandBar is not available.');
         return;
       }
 
-      try {
-        console.log('Adding cat records to CommandBar...');
-        CommandBar.addRecords('cats', [
-          { label: 'Chucho', id: '1' },
-          { label: 'Melicio', id: '2' },
-          { label: 'Mini', id: '3' }
-        ], {
-          labelKey: "label"
-        });
-        console.log('Cat records added successfully.');
+      CommandBar.boot();
 
-        console.log('Adding cat record action...');
-        CommandBar.addRecordAction('cats', {
-          text: 'View Details',
-          name: 'viewCat',
+      try {
+        // Define and add a custom component
+        CommandBar.addComponent("catListDisplay", {
+          mount: (elem) => ({
+            render: (cats) => {
+              console.log('Rendering cats:', cats);
+              const html = cats.map(cat => `
+                <div style="padding: 10px; border-bottom: 1px solid #ccc;">
+                  <h4>${cat.name}</h4>
+                </div>
+              `).join('');
+              elem.innerHTML = `<div>${html}</div>`;
+            },
+            unmount: () => {
+              elem.innerHTML = ''; // Clean up when the component is not in use
+            }
+          })
+        });
+
+        // Add a command that uses a callback to display cats using the custom component
+        CommandBar.addCommand({
+          name: 'displayCatList',
+          text: 'Cat List',
           template: {
             type: 'callback',
-            value: 'viewCatDetails'
+            value: 'displayCatList'
           }
         });
-        console.log('Cat record action added successfully.');
-      } catch (error) {
-        console.error('Failed to set up CommandBar records or actions:', error);
+
+        // Setup callback to provide data to the component
+        CommandBar.addCallback('displayCatList', () => {
+          const cats = [
+            { name: 'Chucho', id: '0' },
+            { name: 'Melicio', id: '1' },
+            { name: 'Mini', id: '2' }
+          ];
+          console.log('Callback triggered, cats:', cats);
+          document.getElementById('catDisplayArea').innerHTML = cats.map(cat => `<div>${cat.name}</div>`).join('');
+          return cats;  // Ensure this returns the expected array
+        });
+
+      } catch (err) {
+        console.error('Error setting up CommandBar:', err);
       }
     };
 
-    setupCatRecords();
+    setupCommandBar();
   }, []);
 
-  return null; // This component does not render anything
+  return (
+    <div>
+      <div id="catDisplayArea"></div>
+    </div>
+  );
 };
 
 export default CatRecords;
